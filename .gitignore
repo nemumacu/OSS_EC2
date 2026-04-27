@@ -1,0 +1,57 @@
+# ==========================================
+# [Python] 컴파일 및 런타임 쓰레기 파일
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ==========================================
+# [Virtual Environments] 가상환경 (용량 절약)
+# ==========================================
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# ==========================================
+# [macOS] 운영체제 특유의 숨김 파일 (협업 방해 요소)
+# ==========================================
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+# ==========================================
+# [IDE - VS Code] 에디터 설정 파일
+# ==========================================
+.vscode/
+*.code-workspace
+.history/
+
+# ==========================================
+# [Streamlit] 로컬 설정 및 캐시
+# ==========================================
+.streamlit/config.toml
+.streamlit/secrets.toml
