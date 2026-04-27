@@ -31,6 +31,7 @@ def generate_quiz_set(player_name, seed_val):
         others = [f"{item['title']}, {item['author']}" for item in full_db 
                   if f"{item['title']}, {item['author']}" != correct]
         wrong_options = random.sample(others, min(len(others), 2))
+        # 답이 아닌 항목들 중 랜덤 두 개 항목을 가져와 오답 항목 생성
         options = [correct] + wrong_options
         random.shuffle(options)
         
@@ -42,6 +43,9 @@ def generate_quiz_set(player_name, seed_val):
     return quiz_set
 
 # 세션 상태 초기 설정
+if 'user_progress' not in st.session_state:
+    st.session_state.user_progress = {}
+
 defaults = {
     'page': 'login',
     'login_done': False,
@@ -50,7 +54,6 @@ defaults = {
     'score': 0,
     'quiz_data': [],
     'answers': [],
-    'seed': 42,
     'show_login_input': False,
     'submitted': False
 }
@@ -58,6 +61,9 @@ defaults = {
 for key, value in defaults.items():
     if key not in st.session_state:
         st.session_state[key] = value
+
+if 'seed' not in st.session_state:
+    st.session_state.seed = 42
 
 # 우측 상단 헤더 (로그인 상태 표시, 플레이어명 표시, 로그아웃)
 col1, col2 = st.columns([4, 1])
@@ -70,7 +76,7 @@ with col2:
         st.caption(f"ID: {st.session_state.player_name}")
         if st.button("로그아웃"):
             for key in defaults.keys():
-                st.session_state[key] = defaults[key]
+                st.session_state[key] = defaults[key] 
             st.experimental_rerun()
 
 # 화면 구성
@@ -79,7 +85,7 @@ with col2:
 if st.session_state.page == 'login':
     st.title("📖 문학 작품의 첫 문장 맞추기")
     st.subheader("26-1 OSS 중간대체과제")
-    st.write("이름: 홍길동 / 학번: 202XXXXX")
+    st.write("이름: 김수연 / 학번: 2024508115")
 
     if not st.session_state.login_done:
         if st.button("플레이어 로그인하기"):
@@ -91,11 +97,16 @@ if st.session_state.page == 'login':
                 if name_input:
                     st.session_state.player_name = name_input
                     st.session_state.login_done = True
-                    st.success("로그인 성공!")
+        
+                    if name_input in st.session_state.user_progress:
+                        st.session_state.seed = st.session_state.user_progress[name_input]
+                    else:
+                        st.session_state.user_progress[name_input] = 42
+                        st.session_state.seed = 42
+            
+                    st.success(f"{name_input}님, 환영합니다!")
                     time.sleep(0.5)
                     st.experimental_rerun()
-                else:
-                    st.error("플레이어명을 입력해주세요.")
     else:
         if st.button("문제 풀기"):
             st.session_state.quiz_data = generate_quiz_set(st.session_state.player_name, st.session_state.seed)
@@ -164,8 +175,9 @@ elif st.session_state.page == 'result':
         st.experimental_rerun()
     
     if c2.button("새로운 문제 풀기"):
-        # 새로운 문제 세트 생성 (시드값 변경)
         st.session_state.seed += 1 
+        st.session_state.user_progress[st.session_state.player_name] = st.session_state.seed
+    
         st.session_state.update({
             'current_index': 0, 'score': 0, 'answers': [], 'submitted': False,
             'quiz_data': generate_quiz_set(st.session_state.player_name, st.session_state.seed),
