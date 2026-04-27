@@ -83,7 +83,7 @@ with col2:
 
 # [로그인 화면
 if st.session_state.page == 'login':
-    st.title("📖 문학 작품의 첫 문장 맞추기")
+    st.title("📖 문학 작품 첫 문장 맞추기")
     st.subheader("26-1 OSS 중간대체과제")
     st.write("이름: 김수연 / 학번: 2024508115")
 
@@ -93,21 +93,26 @@ if st.session_state.page == 'login':
         
         if st.session_state.show_login_input:
             name_input = st.text_input("플레이어명 입력:")
+            
             if st.button("확인"):
-                if name_input:
-                    st.session_state.player_name = name_input
+                if name_input.strip():
+                    st.session_state.player_name = name_input.strip()
                     st.session_state.login_done = True
-        
+                    
                     if name_input in st.session_state.user_progress:
                         st.session_state.seed = st.session_state.user_progress[name_input]
                     else:
                         st.session_state.user_progress[name_input] = 42
                         st.session_state.seed = 42
-            
-                    st.success(f"{name_input}님, 환영합니다!")
+                        
+                    st.success(f"✅ 환영합니다, {name_input}님")
                     time.sleep(0.5)
                     st.experimental_rerun()
+                else:
+                    st.error("⚠️ 플레이어명을 정확히 입력해주세요.")
+                # -------------------------------
     else:
+        st.info(f"현재 접속: {st.session_state.player_name}님")
         if st.button("문제 풀기"):
             st.session_state.quiz_data = generate_quiz_set(st.session_state.player_name, st.session_state.seed)
             st.session_state.page = 'quiz'
