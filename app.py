@@ -164,6 +164,9 @@ elif st.session_state.page == 'quiz':
         btn_label = "결과 확인하기" if curr_idx == 9 else "다음 문제로"
         if st.button(btn_label):
             if curr_idx == 9:
+                print(f"\n>>> [FINAL RESULT] 플레이어: {st.session_state.player_name}")
+                print(f">>> [FINAL RESULT] 최종 점수: {st.session_state.score} / 10")
+                print(f">>> [SYSTEM] 퀴즈 종료 -------------------------------\n")
                 st.session_state.page = 'result'
             else:
                 st.session_state.current_index += 1
@@ -175,9 +178,7 @@ elif st.session_state.page == 'result':
     st.title("📊 결과")
     st.header(f"{st.session_state.score} / 10점")
 
-    print(f"\n>>> [FINAL RESULT] 플레이어: {st.session_state.player_name}")
-    print(f">>> [FINAL RESULT] 최종 점수: {st.session_state.score} / 10")
-    print(f">>> [SYSTEM] 퀴즈 종료 -------------------------------\n")
+    
     
     if st.session_state.score == 10:
         st.balloons()
@@ -187,12 +188,15 @@ elif st.session_state.page == 'result':
     
     if c1.button("처음부터 다시 풀기"):
         # 같은 문제 세트로 다시 시작
+        print(f">>> 같은 문제 세트로 다시 풀기")
         st.session_state.update({'current_index': 0, 'score': 0, 'answers': [], 'page': 'quiz', 'submitted': False})
         st.rerun()
     
     if c2.button("새로운 문제 풀기"):
+        print(f">>> 새 문제 세트로 풀기")
         st.session_state.seed += 1 
         st.session_state.user_progress[st.session_state.player_name] = st.session_state.seed
+        print(f">>> [SYSTEM] 현재 세션 시드: {st.session_state.seed}")
     
         st.session_state.update({
             'current_index': 0, 'score': 0, 'answers': [], 'submitted': False,
