@@ -156,7 +156,9 @@ elif st.session_state.page == 'quiz':
             if choice == data['ans']:
                 st.session_state.score += 1
             st.session_state.submitted = True
-            print(f">>> [ANSWER] 문제 {curr_idx + 1}: 유저 선택 [{choice}] / 결과: {'정답(O)' if is_correct else '오답(X)'}")
+            
+            print(f">>> [ANSWER] 문제 {curr_idx + 1}: 유저 선택 [{choice}] / 결과: {'정답(O)' if choice == data['ans'] else '오답(X)'}")
+            
             st.rerun()
     else:
         btn_label = "결과 확인하기" if curr_idx == 9 else "다음 문제로"
