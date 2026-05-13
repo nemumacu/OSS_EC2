@@ -77,7 +77,7 @@ with col2:
         if st.button("로그아웃"):
             for key in defaults.keys():
                 st.session_state[key] = defaults[key] 
-            st.experimental_rerun()
+            st.rerun()
 
 # 화면 구성
 
@@ -107,7 +107,7 @@ if st.session_state.page == 'login':
                         
                     st.success(f"✅ 환영합니다, {name_input}님")
                     time.sleep(0.5)
-                    st.experimental_rerun()
+                    st.rerun()
                 else:
                     st.error("⚠️ 플레이어명을 정확히 입력해주세요.")
                 # -------------------------------
@@ -117,18 +117,18 @@ if st.session_state.page == 'login':
             st.session_state.quiz_data = generate_quiz_set(st.session_state.player_name, st.session_state.seed)
             st.session_state.page = 'quiz'
             st.session_state.current_index = 0
-            st.experimental_rerun()
+            st.rerun()
 
 # 문제 풀이 화면
 elif st.session_state.page == 'quiz':
     if not st.session_state.quiz_data:
         st.session_state.page = 'login'
-        st.experimental_rerun()
+        st.rerun()
 
     curr_idx = st.session_state.current_index
     if curr_idx >= len(st.session_state.quiz_data):
         st.session_state.page = 'result'
-        st.experimental_rerun()
+        st.rerun()
 
     data = st.session_state.quiz_data[curr_idx]
     st.title("✍️ 문제 풀이")
@@ -152,7 +152,7 @@ elif st.session_state.page == 'quiz':
             if choice == data['ans']:
                 st.session_state.score += 1
             st.session_state.submitted = True
-            st.experimental_rerun()
+            st.rerun()
     else:
         btn_label = "결과 확인하기" if curr_idx == 9 else "다음 문제로"
         if st.button(btn_label):
@@ -161,7 +161,7 @@ elif st.session_state.page == 'quiz':
             else:
                 st.session_state.current_index += 1
             st.session_state.submitted = False
-            st.experimental_rerun()
+            st.rerun()
 
 # 결과 화면 
 elif st.session_state.page == 'result':
@@ -177,7 +177,7 @@ elif st.session_state.page == 'result':
     if c1.button("처음부터 다시 풀기"):
         # 같은 문제 세트로 다시 시작
         st.session_state.update({'current_index': 0, 'score': 0, 'answers': [], 'page': 'quiz', 'submitted': False})
-        st.experimental_rerun()
+        st.rerun()
     
     if c2.button("새로운 문제 풀기"):
         st.session_state.seed += 1 
@@ -188,7 +188,7 @@ elif st.session_state.page == 'result':
             'quiz_data': generate_quiz_set(st.session_state.player_name, st.session_state.seed),
             'page': 'quiz'
         })
-        st.experimental_rerun()
+        st.rerun()
         
     if c3.button("오답 모아보기"):
         if st.session_state.score == 10:
