@@ -98,6 +98,9 @@ if st.session_state.page == 'login':
                 if name_input.strip():
                     st.session_state.player_name = name_input.strip()
                     st.session_state.login_done = True
+
+                    print(f"\n>>> [SYSTEM] 새 플레이어 로그인: {st.session_state.player_name}")
+                    print(f">>> [SYSTEM] 현재 세션 시드: {st.session_state.seed}")
                     
                     if name_input in st.session_state.user_progress:
                         st.session_state.seed = st.session_state.user_progress[name_input]
@@ -115,6 +118,7 @@ if st.session_state.page == 'login':
         st.info(f"현재 접속: {st.session_state.player_name}님")
         if st.button("문제 풀기"):
             st.session_state.quiz_data = generate_quiz_set(st.session_state.player_name, st.session_state.seed)
+            print(f">>> [QUIZ] 10문제 세트가 생성되었습니다.")
             st.session_state.page = 'quiz'
             st.session_state.current_index = 0
             st.rerun()
@@ -152,6 +156,7 @@ elif st.session_state.page == 'quiz':
             if choice == data['ans']:
                 st.session_state.score += 1
             st.session_state.submitted = True
+            print(f">>> [ANSWER] 문제 {curr_idx + 1}: 유저 선택 [{choice}] / 결과: {'정답(O)' if is_correct else '오답(X)'}")
             st.rerun()
     else:
         btn_label = "결과 확인하기" if curr_idx == 9 else "다음 문제로"
@@ -167,6 +172,10 @@ elif st.session_state.page == 'quiz':
 elif st.session_state.page == 'result':
     st.title("📊 결과")
     st.header(f"{st.session_state.score} / 10점")
+
+    print(f"\n>>> [FINAL RESULT] 플레이어: {st.session_state.player_name}")
+    print(f">>> [FINAL RESULT] 최종 점수: {st.session_state.score} / 10")
+    print(f">>> [SYSTEM] 퀴즈 종료 -------------------------------\n")
     
     if st.session_state.score == 10:
         st.balloons()
